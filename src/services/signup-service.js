@@ -1,10 +1,8 @@
-import axios from "axios";
-
-const API_BASE = process.env.REACT_APP_API_BASE || "https://travelapp.cyclic.app";
+import api from "./api";
 
 export const signupHandler = async (username, number, email, password, setAlert) => {
   try {
-    const data = await axios.post(`${API_BASE}/api/auth/register`, {
+    const data = await api.post(`/api/auth/register`, {
       username: username,
       number: number,
       email: email,
