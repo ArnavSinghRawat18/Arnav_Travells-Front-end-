@@ -15,8 +15,12 @@ export const signupHandler = async (username, number, email, password, setAlert)
       message: `Account Created:: username - ${username}`,
       type: "success",
     });
+  return data;
   } catch (err) {
-    console.log("error adding user to database", err?.response?.data || err.message);
-    setAlert({ open: true, message: "Signup failed", type: "error" });
+  console.log("error adding user to database", err?.response?.data || err.message);
+  // Prefer a server-provided message when available
+  const serverMsg = err?.response?.data?.message || err?.response?.data || err?.message || 'Signup failed';
+  setAlert({ open: true, message: serverMsg, type: "error" });
+  return null;
   }
 };

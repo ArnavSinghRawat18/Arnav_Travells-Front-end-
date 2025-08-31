@@ -49,27 +49,27 @@ export const HotelDetails = ({ singleHotel }) => {
         <div className="d-flex gap-xxl">
           <div className="d-flex direction-column">
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Kitchen
+              <span className="apps material-icons-outlined">apps</span>Kitchen
             </span>
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Free parking
+              <span className="apps material-icons-outlined">apps</span>Free parking
               on premises
             </span>
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Dedicated
+              <span className="apps material-icons-outlined">apps</span>Dedicated
               Workspace
             </span>
           </div>
           <div className="d-flex direction-column">
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Wifi
+              <span className="apps material-icons-outlined">apps</span>Wifi
             </span>
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Washing
+              <span className="apps material-icons-outlined">apps</span>Washing
               Machine
             </span>
             <span className="span d-flex align-center gap">
-              <span class="apps material-icons-outlined">apps</span>Patio or
+              <span className="apps material-icons-outlined">apps</span>Patio or
               Balcony
             </span>
           </div>

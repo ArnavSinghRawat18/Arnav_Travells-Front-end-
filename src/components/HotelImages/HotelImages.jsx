@@ -1,25 +1,25 @@
 import "./HotelImages.css";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import './hotel-swiper.css';
 
 export const HotelImages = ({ singleHotel }) => {
-  console.log(singleHotel);
-  const { image, imageArr } = singleHotel;
+  const { image, imageArr = [] } = singleHotel || {};
+  const slides = [image, ...imageArr].filter(Boolean);
 
   return (
-    <div className="hotel-image-container d-flex gap-small">
-      <div className="primary-image-container">
-        <img className="primary-img" src={image} alt="hotel" />
-      </div>
-      <div className="d-flex wrap gap-small">
-        {imageArr &&
-          imageArr.map((image) => (
-            <img
-              key={image}
-              className="hotel-img"
-              src={image}
-              alt="hotel"
-            />
-          ))}
-      </div>
+    <div className="hotel-image-swiper">
+      <Swiper spaceBetween={10} slidesPerView={1}>
+        {slides.map((src, idx) => (
+          <SwiperSlide key={idx}>
+            <div className="kenburns-wrap">
+              <img className="kenburns" src={src} alt={`slide-${idx}`} />
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
+
+export default HotelImages;

@@ -14,6 +14,14 @@ export const FinalPrice = ({ singleHotel }) => {
 
   const { accessToken, authDispatch } = useAuth();
 
+  // Calculate number of nights dynamically
+  const numberOfNights = checkInDate && checkOutDate
+    ? Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24))
+    : 1;
+
+  const serviceFee = 200;
+  const totalPrice = price * numberOfNights + serviceFee;
+
   const handleGuestChange = (event) => { 
     dateDispatch({
       type: "GUESTS",
@@ -96,16 +104,16 @@ export const FinalPrice = ({ singleHotel }) => {
       </div>
       <div className="price-distribution d-flex direction-column">
         <div className="final-price d-flex align-center justify-space-between">
-          <span className="span">Rs. {price} x 2 nights</span>
-          <span className="span">Rd. {price * 2}</span>
+          <span className="span">Rs. {price} x {numberOfNights} night{numberOfNights !== 1 ? 's' : ''}</span>
+          <span className="span">Rs. {price * numberOfNights}</span>
         </div>
         <div className="final-price d-flex align-center justify-space-between">
           <span className="span">Service fee</span>
-          <span className="span">Rd. 200</span>
+          <span className="span">Rs. {serviceFee}</span>
         </div>
         <div className="final-price d-flex align-center justify-space-between">
           <span className="span">Total</span>
-          <span className="span">Rs. {price * 2 + 200}</span>
+          <span className="span">Rs. {totalPrice}</span>
         </div>
       </div>
     </div>

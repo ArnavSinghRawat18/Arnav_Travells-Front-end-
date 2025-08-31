@@ -9,7 +9,6 @@ export const OrderSummaryComp = () => {
     const {dateDispatch} = useDate();
     const { filterDispatch} = useFilter();
     const { hotel } = useHotel();
-    console.log({hotel})
     const { orderId, name, image, city, state, checkInDate, checkOutDate, totalPayableAmount} = hotel;
 
     const handleContinueBookingClick = () => {
@@ -27,7 +26,7 @@ export const OrderSummaryComp = () => {
             <div className="d-flex align-center justify-space-between br-bottom pd-small">
                 <h2>Order Summary</h2>
                 <button className="button btn-auth btn-close cursor-pointer d-flex align-center justify-center" onClick={handleContinueBookingClick}>
-                    <span class="material-icons-outlined">
+                    <span className="material-icons-outlined">
                         close
                     </span>
                 </button>

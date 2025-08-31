@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
+import { HOTELS_ENDPOINT } from "../../config/api";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Navbar,
@@ -11,6 +12,7 @@ import {
   ProfileDropDown,
   Alert
 } from "../../components";
+import { Hero } from './Hero';
 import "./Home.css";
 import { useCategory, useDate, useFilter, useAuth, useAlert } from "../../context";
 import {
@@ -40,22 +42,56 @@ export const Home = () => {
   } = useFilter();
 
   const { isAuthModalOpen, isDropDownModalOpen } = useAuth();
-  const { alert } = useAlert();
+  const { alert, setAlert } = useAlert();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get(
-          `https://travelapp.cyclic.app/api/hotels?category=${hotelCategory}`
-        );
+    let cancelled = false;
+    const maxAttempts = 5;
+    const baseDelayMs = 700; // initial retry delay
 
+    const fetchWithRetry = async (attempt = 1) => {
+      try {
+        setHotels([]);
+        setTestData([]);
+        setIsLoading(true);
+
+        const url = hotelCategory
+          ? `${HOTELS_ENDPOINT}?category=${encodeURIComponent(hotelCategory)}`
+          : HOTELS_ENDPOINT;
+
+        const { data } = await axios.get(url);
+        if (cancelled) return;
+        setIsLoading(false);
         setTestData(data);
         setHotels(data ? data.slice(0, 16) : []);
       } catch (err) {
-        console.log(err);
+        if (cancelled) return;
+        const status = err?.response?.status;
+        // If DB not ready yet (503), retry with backoff
+        if (status === 503 && attempt < maxAttempts) {
+          const delay = baseDelayMs * Math.pow(1.4, attempt - 1);
+          setTimeout(() => fetchWithRetry(attempt + 1), delay);
+          return;
+        }
+        setIsLoading(false);
+        setAlert({
+          open: true,
+          message:
+            status === 503
+              ? "Service starting up. Please try again shortly."
+              : "Failed to load hotels. Please try again.",
+          type: "error"
+        });
       }
-    })();
-  }, [hotelCategory]);
+    };
+
+    fetchWithRetry();
+    return () => {
+      cancelled = true;
+    };
+  }, [hotelCategory, setAlert]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const fetchMoreData = () => {
@@ -75,51 +111,69 @@ export const Home = () => {
     }, 1000);
   };
 
-  const filteredHotelsByPrice = getHotelsByPrice(hotels, priceRange);
-  const filteredHotelsByBedsAndRooms = getHotelsByRoomsAndBeds(
-    filteredHotelsByPrice,
-    noOfBathrooms,
-    noOfBedrooms,
-    noOfBeds
-  );
-  const filteredHotelsByPropertyType = getHotelsByPropertyType(
-    filteredHotelsByBedsAndRooms,
-    propertyType
-  );
-
-  const filteredHotelsByRatings = getHotelsByRatings(
-    filteredHotelsByPropertyType,
-    traveloRating
-  );
-
-  const filteredHotelsByCancelation = getHotelsByCancelation(
-    filteredHotelsByRatings,
-    isCancelable
-  );
+  const filteredHotels = useMemo(() => {
+    const filteredHotelsByPrice = getHotelsByPrice(hotels, priceRange);
+    const filteredHotelsByBedsAndRooms = getHotelsByRoomsAndBeds(
+      filteredHotelsByPrice,
+      noOfBathrooms,
+      noOfBedrooms,
+      noOfBeds
+    );
+    const filteredHotelsByPropertyType = getHotelsByPropertyType(
+      filteredHotelsByBedsAndRooms,
+      propertyType
+    );
+    const filteredHotelsByRatings = getHotelsByRatings(
+      filteredHotelsByPropertyType,
+      traveloRating
+    );
+    return getHotelsByCancelation(
+      filteredHotelsByRatings,
+      isCancelable
+    );
+  }, [hotels, priceRange, noOfBathrooms, noOfBedrooms, noOfBeds, propertyType, traveloRating, isCancelable]);
 
   return (
     <div className="relative">
       <Navbar route="home"/>
+  <Hero />
       <Categories />
-      {hotels && hotels.length > 0 ? (
-        <InfiniteScroll
-          dataLength={hotels.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={
-            hotels.length > 0 && <h3 className="alert-text">Loading...</h3>
-          }
-          endMessage={<p className="alert-text">You have seen it all</p>}
-        >
-          <main className="main d-flex align-center wrap gap-larger">
-            {filteredHotelsByCancelation &&
-              filteredHotelsByCancelation.map((hotel) => (
-                <HotelCard key={hotel._id} hotel={hotel} />
-              ))}
-          </main>
-        </InfiniteScroll>
+      {isLoading ? (
+        <main className="main d-flex align-center wrap gap-larger">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="hotel-skeleton" />
+          ))}
+        </main>
+      ) : hotels && hotels.length > 0 ? (
+        <main className="main">
+          <InfiniteScroll
+            className="hotel-list"
+            dataLength={filteredHotels.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <div className="d-flex align-center justify-center loader-row">
+                <h4>Loading...</h4>
+              </div>
+            }
+          >
+            {filteredHotels.map((hotel) => (
+              <HotelCard key={hotel._id} hotel={hotel} />
+            ))}
+          </InfiniteScroll>
+        </main>
       ) : (
-        <></>
+        <main className="main d-flex align-center justify-center">
+          <div className="welcome-message">
+            <h2>🌟 Welcome to Your Travel Adventure! 🌟</h2>
+            <p>Discover amazing hotels and destinations worldwide</p>
+            <div className="welcome-actions">
+              <button className="button btn-primary" onClick={() => window.location.reload()}>
+                🔄 Load Hotels
+              </button>
+            </div>
+          </div>
+        </main>
       )}
       {isDropDownModalOpen && <ProfileDropDown />}
       {isSearchModalOpen && <SearchStayWithDate />}

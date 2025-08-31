@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import "./HotelCard.css";
 import { useWishlist, useAuth, useAlert } from "../../context";
+import { useState } from 'react';
+import QuickViewModal from '../QuickViewModal/QuickViewModal';
 import { findHotelInWishlist } from "../../utils";
 
 export const HotelCard = ({ hotel }) => {
@@ -17,6 +19,20 @@ export const HotelCard = ({ hotel }) => {
   const navigate = useNavigate();
 
   const handleHotelCardClick = () => {
+    navigate(`/hotels/${name}/${address}-${state}/${_id}/reserve`);
+  };
+
+  const [isQuickOpen, setQuickOpen] = useState(false);
+
+  const handleQuickViewClick = (e) => {
+    e.stopPropagation();
+    setQuickOpen(true);
+  };
+
+  const handleQuickClose = () => setQuickOpen(false);
+
+  const handleQuickBook = (hotel) => {
+    setQuickOpen(false);
     navigate(`/hotels/${name}/${address}-${state}/${_id}/reserve`);
   };
 
@@ -60,7 +76,7 @@ export const HotelCard = ({ hotel }) => {
               {address}, {state}
             </span>
             <span className="rating d-flex align-center">
-              <span class="material-icons-outlined">star</span>
+              <span className="material-icons-outlined">star</span>
               <span>{rating}</span>
             </span>
           </div>
@@ -71,6 +87,7 @@ export const HotelCard = ({ hotel }) => {
           </p>
         </div>
       </div>
+      <button className="button btn-quick absolute d-flex align-center" onClick={handleQuickViewClick}>Quick View</button>
       <button
         className="button btn-wishlist absolute d-flex align-center"
         onClick={handleWishlistClick}
@@ -82,6 +99,9 @@ export const HotelCard = ({ hotel }) => {
           favorite
         </span>
       </button>
+      {isQuickOpen && (
+        <QuickViewModal hotel={hotel} onClose={handleQuickClose} onBook={handleQuickBook} />
+      )}
     </div>
   );
 };

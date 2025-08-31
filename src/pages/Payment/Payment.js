@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDate, useHotel } from "../../context";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
+import { HOTELS_ENDPOINT } from "../../config/api";
 import "./Payment.css";
 
 export const Payment = () => {
@@ -25,9 +26,7 @@ export const Payment = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(
-          `https://travelapp.cyclic.app/api/hotels/${id}`
-        );
+            const { data } = await axios.get(`${HOTELS_ENDPOINT}/${id}`);
         setSingleHotel(data);
       } catch (err) {
         console.log(err);

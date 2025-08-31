@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import { useDate, useAuth } from "../../context";
 import { Link } from "react-router-dom";
+import DarkToggle from '../DarkToggle/DarkToggle';
 
 export const Navbar = ({route}) => {
   const { destination, dateDispatch, checkInDate, checkOutDate, guests } =
@@ -31,7 +32,7 @@ export const Navbar = ({route}) => {
     <header className="heading d-flex align-center">
       <h1 className="heading-1">
         <Link className="link" to="/">
-          TravelO
+          🌍 Arnav Travells ✈️
         </Link>
       </h1>
       {
@@ -56,11 +57,12 @@ export const Navbar = ({route}) => {
         <span className="form-option">
           {route !== "home" && guests > 0 ? `${guests} guests` : "Add Guests"}
         </span>
-        <span class="search material-icons-outlined">search</span>
+        <span className="search material-icons-outlined">search</span>
       </div>
       }
       
       <nav className="d-flex align-center gap-large" onClick={handleAuthClick}>
+  <DarkToggle />
         <div className="nav d-flex align-center cursor-pointer">
           <span className="material-icons-outlined profile-option menu">
             menu

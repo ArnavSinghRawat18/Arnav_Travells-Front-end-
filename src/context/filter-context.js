@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { filterReducer } from "../reducer";
 
-const initalValue = {
+const initialValue = {
   isFilterModalOpen: false,
   priceRange: [300, 20000],
   noOfBathrooms: "Any",
@@ -12,7 +12,7 @@ const initalValue = {
   isCancelable: true,
 };
 
-const FilterContext = createContext(initalValue);
+const FilterContext = createContext(initialValue);
 
 const FilterProvider = ({ children }) => {
   const [
@@ -27,7 +27,7 @@ const FilterProvider = ({ children }) => {
       isCancelable,
     },
     filterDispatch,
-  ] = useReducer(filterReducer, initalValue);
+  ] = useReducer(filterReducer, initialValue);
 
   return (
     <FilterContext.Provider

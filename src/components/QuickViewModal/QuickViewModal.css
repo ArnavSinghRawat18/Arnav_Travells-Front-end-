@@ -1,0 +1,10 @@
+.quickview-overlay { background: rgba(0,0,0,0.45); top:0; left:0; right:0; bottom:0; z-index: 20; }
+.quickview-card { width: 820px; max-width: 96%; background: var(--background-color); padding: 1rem; border-radius: 8px; }
+.qv-content { gap: 1rem; }
+.qv-image { width: 320px; height: 200px; object-fit: cover; border-radius: 6px; }
+.qv-details { flex: 1; }
+.btn-close-quick { position: absolute; right: 12px; top: 12px; }
+
+/* Skeleton placeholder styles */
+.hotel-skeleton { width: 300px; height: 260px; background: linear-gradient(90deg, #eee 25%, #f6f6f6 37%, #eee 63%); background-size: 400% 100%; animation: shimmer 1.4s linear infinite; border-radius: 8px; }
+@keyframes shimmer { 0% { background-position: -468px 0 } 100% { background-position: 468px 0 } }

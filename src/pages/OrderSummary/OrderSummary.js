@@ -1,10 +1,13 @@
 import { OrderSummaryComp } from "../../components";
+import BookingConfirmation from '../../components/BookingConfirmation/BookingConfirmation';
+import { useHotel } from '../../context';
 import "./OrderSummary.css";
-export const OrderSummary = () => {
 
+export const OrderSummary = () => {
+  const { hotel } = useHotel();
   return (
     <main className="order-summary-main">
-      <OrderSummaryComp />
+      {hotel && hotel.orderId ? <BookingConfirmation booking={hotel} /> : <OrderSummaryComp />}
     </main>
   );
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { HOTELS_ENDPOINT } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth, useDate, useAlert } from "../../context";
@@ -12,6 +13,7 @@ import {
   SearchStayWithDate,
   Alert
 } from "../../components";
+import StickyBookCTA from '../../components/StickyBookCTA/StickyBookCTA';
 import "./SingleHotel.css";
 
 export const SingleHotel = () => {
@@ -25,9 +27,7 @@ export const SingleHotel = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(
-          `https://travelapp.cyclic.app/api/hotels/${id}`
-        );
+  const { data } = await axios.get(`${HOTELS_ENDPOINT}/${id}`);
         setSingleHotel(data);
       } catch (err) {
         console.log(err);
@@ -50,6 +50,7 @@ export const SingleHotel = () => {
           <FinalPrice singleHotel={singleHotel} />
         </div>
       </main>
+  <StickyBookCTA hotelId={id} name={name || ''} address={singleHotel.address || ''} state={state || ''} />
       {isSearchModalOpen && <SearchStayWithDate />}
       {isDropDownModalOpen && <ProfileDropDown />}
       {isAuthModalOpen && <AuthModal />}

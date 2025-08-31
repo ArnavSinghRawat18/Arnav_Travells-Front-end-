@@ -5,8 +5,6 @@ const numberOfAmenities = ["Any", "1", "2", "3", "4", "5+"];
 export const RoomsAndBeds = () => {
   const { filterDispatch, noOfBathrooms, noOfBedrooms, noOfBeds } = useFilter();
 
-  console.log({ noOfBathrooms, noOfBedrooms, noOfBeds });
-
   const handleBedroomsClick = (number) => {
     filterDispatch({
       type: "BEDROOMS",

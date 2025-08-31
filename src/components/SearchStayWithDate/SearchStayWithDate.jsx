@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { HOTELS_ENDPOINT } from "../../config/api";
 import { DateSelector } from "../DateSelector/DateSelector";
 import "./SearchStayWithDate.css";
 import { useDate, useCategory } from "../../context";
@@ -15,12 +16,10 @@ export const SearchStayWithDate = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(
-          `https://travelapp.cyclic.app/api/hotels?category=${hotelCategory}`
-        );
+  const { data } = await axios.get(`${HOTELS_ENDPOINT}?category=${encodeURIComponent(hotelCategory)}`);
         setHotels(data);
       } catch (err) {
-        console.log(err);
+        // Silently fail for search suggestions
       }
     })();
   }, [hotelCategory]);

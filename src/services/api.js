@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "https://travelapp.cyclic.app";
+// Prefer the more frequently used REACT_APP_API_URL (matches src/config/api.js),
+// fall back to REACT_APP_API_BASE for compatibility, then default to localhost for dev.
+const API_BASE = process.env.REACT_APP_API_URL || process.env.REACT_APP_API_BASE || "http://localhost:3500";
 
 const api = axios.create({
   baseURL: API_BASE,

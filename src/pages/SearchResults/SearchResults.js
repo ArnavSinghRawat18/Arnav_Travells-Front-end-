@@ -2,25 +2,28 @@ import { Fragment, useEffect, useState } from "react";
 import { HotelCard, Navbar, Alert } from "../../components";
 import { useDate, useCategory, useAlert } from "../../context";
 import axios from "axios";
+import { HOTELS_ENDPOINT } from "../../config/api";
 
 export const SearchResults = () => {
   const { destination } = useDate();
   const { hotelCategory } = useCategory();
   const [hotels, setHotels] = useState([]);
-  const { alert } = useAlert();
+  const { alert, setAlert } = useAlert();
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(
-          `https://travelapp.cyclic.app/api/hotels?category=${hotelCategory}`
-        );
+  const { data } = await axios.get(`${HOTELS_ENDPOINT}?category=${encodeURIComponent(hotelCategory)}`);
         setHotels(data);
       } catch (err) {
-        console.log(err);
+        setAlert({
+          open: true,
+          message: "Failed to load search results. Please try again.",
+          type: "error"
+        });
       }
     })();
-  }, [destination, hotelCategory]);
+  }, [destination, hotelCategory, setAlert]);
 
   const filteredSearchResults = hotels.filter(
     ({ city, address, state }) =>

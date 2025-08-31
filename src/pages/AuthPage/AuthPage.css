@@ -1,0 +1,21 @@
+.auth-page-root {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(180deg, #f6fbff 0%, #ffffff 100%);
+}
+.auth-page-card {
+  width: 920px;
+  max-width: 95%;
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.auth-left-hero {
+  flex: 1 1 50%;
+  background-size: cover;
+  background-position: center;
+}
+.auth-right-form {
+  flex: 1 1 50%;
+  padding: 2rem;
+}
